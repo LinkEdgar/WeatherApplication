@@ -4,4 +4,5 @@
     <dimen name="searchbar_elevation">8dp</dimen>
     <dimen name="horizontal_margin">8dp</dimen>
     <dimen name="horizontal_margin_large">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

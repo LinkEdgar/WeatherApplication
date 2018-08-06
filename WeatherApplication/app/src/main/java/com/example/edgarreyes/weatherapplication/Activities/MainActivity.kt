@@ -1,7 +1,8 @@
-package com.example.edgarreyes.weatherapplication
+package com.example.edgarreyes.weatherapplication.Activities
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -11,18 +12,20 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.Toast
+import com.example.edgarreyes.weatherapplication.Adapters.WeatherAdapter
+import com.example.edgarreyes.weatherapplication.Location
+import com.example.edgarreyes.weatherapplication.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
-import org.json.JSONObject
 import java.io.IOException
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
+
 
     //TODO progressbar
 
@@ -31,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     private var mRecyclerView: RecyclerView ?= null
 
-    private var mAdapter: WeatherAdapter ?= null
+    private var mAdapter: WeatherAdapter?= null
 
     private var mLocationList: ArrayList<Location> ? = null
 
@@ -82,26 +85,27 @@ class MainActivity : AppCompatActivity() {
     private fun loadWeatherInformation(url:String){
         val weatherClient = OkHttpClient()
         val request= Request.Builder().url(url).build()
-        setProgressbarVisibility(true)
+        //setProgressbarVisibility(true)
         weatherClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("Failed", "--> $e")
-                setProgressbarVisibility(false)
+                //setProgressbarVisibility(false)
             }
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 try {
                     val responseData = response.body()!!.string()
+                    //TODO delete log
                     Log.e("Response ", "--> $responseData")
                     val jsonArray = JSONArray(responseData)
                     for(x in 0..jsonArray.length()){
                         val json = jsonArray.getJSONObject(x)
-                        val location = Location(json.getString(titleKey),json.getString(locationIdKey), json.getString(typeKey))
+                        val location = Location(json.getString(titleKey), json.getString(locationIdKey), json.getString(typeKey))
                         mLocationList!!.add(location)
                     }
                     mAdapter!!.notifyDataSetChanged()
-                    setProgressbarVisibility(false)
+                    //setProgressbarVisibility(false)
                 } catch (e: JSONException) {
 
                 }
@@ -111,7 +115,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        val baseUrlAddress = "https://www.metaweather.com/api/location/search/?lattlong="
+        val baseUrlAddress = "https://www.metaweather.com/api/location/"
+        val latAndLongSearch = "search/?lattlong="
         val requestLocationCode  = 24
         val titleKey = "title"
         val locationIdKey = "woeid"
@@ -121,7 +126,7 @@ class MainActivity : AppCompatActivity() {
     //helper method to correctly create our request url
     private fun buildUrl(lat: Double, long: Double):String{
         val stringBuilder = StringBuilder()
-        stringBuilder.append(baseUrlAddress).append(lat).append(",$long")
+        stringBuilder.append(baseUrlAddress).append(latAndLongSearch).append(lat).append(",$long")
         Log.d("buildUrl()", "url --> $stringBuilder")
         return stringBuilder.toString()
     }
@@ -131,7 +136,7 @@ class MainActivity : AppCompatActivity() {
         mRecyclerView = main_activity_recycler_view
         val manager: RecyclerView.LayoutManager = LinearLayoutManager(this)
         mRecyclerView!!.layoutManager = manager
-        mAdapter = WeatherAdapter(mLocationList, this)
+        mAdapter = WeatherAdapter(mLocationList, this, this)
         mRecyclerView!!.adapter = mAdapter
 
     }
@@ -140,6 +145,14 @@ class MainActivity : AppCompatActivity() {
         if(setVisible)
             main_activity_progressbar.visibility = View.VISIBLE
         else main_activity_progressbar.visibility = View.GONE
+    }
+
+    //Call back for recyclerview children to handle click events
+    override fun onClick(position: Int) {
+        val detailActivityIntent = Intent(this, WeatherDetailActivity::class.java)
+        detailActivityIntent.putExtra(locationIdKey, mLocationList!!.get(position).location)
+        startActivity(detailActivityIntent)
+        Toast.makeText(this, "$position clicked", Toast.LENGTH_SHORT).show()
     }
 
 

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.edgarreyes.weatherapplication">
-    <!-- This permission will allow me to get the user's last location. I want to avoid getting a fin location and
-     risk wasting the user's battery everytime when their last location is a viable one.-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!--
+     This permission will allow me to get the user's last location. I want to avoid getting a fin location and
+     risk wasting the user's battery everytime when their last location is a viable one.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -13,13 +16,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".DetailWeatherActivity"
+            android:label="@string/title_activity_detail_weather"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Activities.WeatherDetailActivity"></activity>
     </application>
 
 </manifest>

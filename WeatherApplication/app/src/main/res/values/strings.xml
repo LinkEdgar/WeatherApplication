@@ -2,4 +2,14 @@
     <string name="app_name">WeatherApplication</string>
 
     <string name="location_null_label">Failed to get location</string>
+    <string name="title_activity_detail_weather">5 Day Forecast</string>
+
+    <!-- Detail weather container -->
+    <string name="weather_state_label">Weather State:</string>
+    <string name="date_label">Date:</string>
+    <string name="max_temp_label">High:</string>
+    <string name="min_temp_label">Low</string>
+    <string name="current_temp_label">Current Temperature:</string>
+    <string name="air_pressure">Air Pressure</string>
+    <string name="humidity">Humidity</string>
 </resources>
