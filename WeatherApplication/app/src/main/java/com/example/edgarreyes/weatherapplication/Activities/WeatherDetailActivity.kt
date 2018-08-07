@@ -19,7 +19,9 @@ import java.io.IOException
 
 
 /*
-This class loads a 5 day forecast for the selected city.
+This class loads a 5 day forecast for the selected city.I used a listview simply because the list is set to 5 and even if we were to
+expand up to a 10 day forecast the memory wouldn't suffer significantly. Let's face it, no one would trust a forecast expands past 10 days anyway
+so I chose to use a listview over a recyclerview. 
  */
 class WeatherDetailActivity : AppCompatActivity() {
 

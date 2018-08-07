@@ -32,6 +32,8 @@ import org.json.JSONException
 import java.io.IOException
 
 class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
+    /*
+     */
 
 
     //used to get last known location
@@ -213,7 +215,9 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
         })
     }
     /*
-    Takes in the user's text and attempts to query via the api
+    Takes in the user's text and attempts to query via the api.
+    The search suggestion is not functional. I was not able to implement it
+    in time.
      */
     private fun submitSearch(userInput: String){
         //url address to perform queries
