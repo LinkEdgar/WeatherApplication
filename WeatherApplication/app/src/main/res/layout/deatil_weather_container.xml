@@ -6,10 +6,66 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
+        android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/horizontal_margin_large"
         tools:text="Weather state: "
         android:id="@+id/detail_container_weather_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <TextView
+        tools:text="date goes here"
+        android:layout_below="@+id/detail_container_weather_state"
+        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:id="@+id/detail_container_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        tools:text="min temp"
+        android:layout_below="@+id/detail_container_date"
+        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:id="@+id/detail_container_min_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        tools:text="max temp"
+        android:layout_below="@+id/detail_container_min_temp"
+        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:id="@+id/detail_container_max_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        tools:text="current temp"
+        android:layout_below="@+id/detail_container_max_temp"
+        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:id="@+id/detail_container_current_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        tools:text="air pressure"
+        android:layout_below="@+id/detail_container_current_temp"
+        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:id="@+id/detail_container_air_pressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        tools:text="humidity goes here"
+        android:layout_below="@+id/detail_container_air_pressure"
+        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:id="@+id/detail_container_humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/detail_container_weather_image"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/horizontal_margin_large"
+        android:layout_alignParentRight="true"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+
 
 </RelativeLayout>

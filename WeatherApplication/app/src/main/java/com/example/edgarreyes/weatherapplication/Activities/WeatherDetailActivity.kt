@@ -14,9 +14,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
-/*
-
- */
 
 class WeatherDetailActivity : AppCompatActivity() {
 
@@ -46,6 +43,10 @@ class WeatherDetailActivity : AppCompatActivity() {
         Log.e("woedid", "--> $woeId")
     }
 
+    /*
+    Http request for the detailed forecast through OkHttpClient.
+    Since the UI must be updated on the main thread we call runOnUiThread to update the listview
+     */
     private fun makeDetailWeatherRequest(){
         val detailInfoClient = OkHttpClient()
         val url = buildUrl()
@@ -93,26 +94,25 @@ class WeatherDetailActivity : AppCompatActivity() {
         val airPressure = "air_pressure"
         val humidity = "humidity"
         val jsonArrayKey = "consolidated_weather"
+        val weatherAbrreviation = "weather_state_abbr"
     }
 
+    //sets up the List view
     private fun initListView(){
-        detailWeatherList!!.add(WeatherDetail("1", "",null, null, null, null, null))
-        detailWeatherList!!.add(WeatherDetail("2", "",null, null, null, null, null))
-        detailWeatherList!!.add(WeatherDetail("3", "",null, null, null, null, null))
-        detailWeatherList!!.add(WeatherDetail("4", "",null, null, null, null, null))
-
         mAdapter = WeatherDetailAdapter(this, detailWeatherList)
         detailListView = weather_detail_list_view
         detailListView!!.adapter = mAdapter
     }
 
+    //This method takes in a json array and extracts the necessary data into a custom weather object that
+    //populates our listview 
     private fun addDataToAdapter(jsonArray:JSONArray){
         for(x in 0..(jsonArray.length()-1)){
             val json = jsonArray.getJSONObject(x)
             val detailWeather = WeatherDetail(json.getString(weatherState), json.getString(date),
                     json.getString(minTemp), json.getString(maxTemp),
                     json.getString(currentTemp), json.getString(airPressure),
-                    json.getString(humidity))
+                    json.getString(humidity), json.getString(weatherAbrreviation))
             detailWeatherList!!.add(detailWeather)
         }
         mAdapter!!.notifyDataSetChanged()
