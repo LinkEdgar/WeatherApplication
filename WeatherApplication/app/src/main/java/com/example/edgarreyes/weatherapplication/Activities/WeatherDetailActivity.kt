@@ -1,5 +1,6 @@
 package com.example.edgarreyes.weatherapplication.Activities
 
+import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.View
 import android.widget.ListView
 import com.example.edgarreyes.weatherapplication.Adapters.WeatherDetailAdapter
 import com.example.edgarreyes.weatherapplication.R
+import com.example.edgarreyes.weatherapplication.ViewModel.WeatherViewModel
 import com.example.edgarreyes.weatherapplication.WeatherDetail
 import kotlinx.android.synthetic.main.activity_weather_detail.*
 import okhttp3.*
@@ -16,6 +18,9 @@ import org.json.JSONObject
 import java.io.IOException
 
 
+/*
+This class loads a 5 day forecast for the selected city.
+ */
 class WeatherDetailActivity : AppCompatActivity() {
 
     private lateinit var woeId:String
@@ -25,16 +30,26 @@ class WeatherDetailActivity : AppCompatActivity() {
     private var detailListView: ListView ?= null
     private var mAdapter: WeatherDetailAdapter ?= null
 
+    private var mViewModel: WeatherViewModel ?= null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather_detail)
-        detailWeatherList = ArrayList()
+
+        mViewModel = ViewModelProviders.of(this).get(WeatherViewModel::class.java)
+        detailWeatherList = mViewModel!!.getData()
 
         initListView()
 
         handleIntentData()
-        makeDetailWeatherRequest()
+        /*
+        If the data list is empty then we can reload data otherwise the data will be
+        persisted through our view model
+         */
+        if(mViewModel!!.isDataEmpty()) {
+            makeDetailWeatherRequest()
+        }
     }
 
     //gets the extra information passed by the parent activity
@@ -58,6 +73,7 @@ class WeatherDetailActivity : AppCompatActivity() {
                 Log.e("HttpRequest:", "failed")
                 this@WeatherDetailActivity.runOnUiThread{
                     try{
+                        //Ui updates must be done on the main thread
                         setProgressbarVisibility(false)
                     }catch(e:IOException){
                         e.printStackTrace()
@@ -73,6 +89,7 @@ class WeatherDetailActivity : AppCompatActivity() {
 
                     this@WeatherDetailActivity.runOnUiThread{
                         try{
+                            //Ui updates must be done on the main thread
                             addDataToAdapter(jsonArray)
                         }catch(e:IOException){
                             e.printStackTrace()
@@ -122,6 +139,7 @@ class WeatherDetailActivity : AppCompatActivity() {
                     json.getString(humidity), json.getString(weatherAbrreviation))
             detailWeatherList!!.add(detailWeather)
         }
+        mViewModel!!.setData(detailWeatherList!!)
         setProgressbarVisibility(false)
         mAdapter!!.notifyDataSetChanged()
     }

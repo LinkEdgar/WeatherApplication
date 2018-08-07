@@ -2,6 +2,7 @@ package com.example.edgarreyes.weatherapplication.Activities
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
@@ -12,10 +13,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import com.example.edgarreyes.weatherapplication.Adapters.WeatherAdapter
 import com.example.edgarreyes.weatherapplication.Location
+import com.example.edgarreyes.weatherapplication.ViewModel.LocationViewModel
 import com.example.edgarreyes.weatherapplication.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -28,8 +29,6 @@ import java.io.IOException
 class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
 
 
-    //TODO progressbar
-
     //used to get last known location
     private lateinit var fusedLocation: FusedLocationProviderClient
 
@@ -39,14 +38,24 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
 
     private var mLocationList: ArrayList<Location> ? = null
 
+    private var mViewModel: LocationViewModel?= null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mLocationList = ArrayList()
+        mViewModel = ViewModelProviders.of(this).get(LocationViewModel::class.java)
+
+        mLocationList = mViewModel!!.getData()
+
         initRecyclerView()
 
-        checkLocationPermissions()
+        //if the list of locations has a size < 0 then we reload the data
+        if(mLocationList!!.size < 1) {
+            checkLocationPermissions()
+        }
+
+
     }
 
     //Checks if we have the user's permission to access their location and if we don't we ask for the permission
@@ -128,6 +137,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
         val titleKey = "title"
         val locationIdKey = "woeid"
         val typeKey = "location_type"
+        val locationListKey = "list"
     }
 
     //helper method to correctly create our request url
@@ -161,6 +171,9 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
         startActivity(detailActivityIntent)
     }
 
+    /*
+    Takes a json array and extracts the information for our location object
+     */
     fun addDataToAdapter(jsonArray: JSONArray){
         for(x in 0..(jsonArray.length()-1)){
             val json = jsonArray.getJSONObject(x)
@@ -168,8 +181,8 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
             mLocationList!!.add(location)
             mAdapter!!.notifyItemInserted(x)
         }
+        //sets the data
+        mViewModel!!.setData(mLocationList!!)
         setProgressbarVisibility(false)
     }
-
-
 }
