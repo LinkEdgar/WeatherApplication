@@ -2,11 +2,14 @@ package com.example.edgarreyes.weatherapplication.Activities
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.SearchManager
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.SearchRecentSuggestions
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -16,6 +19,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.edgarreyes.weatherapplication.Adapters.WeatherAdapter
+import com.example.edgarreyes.weatherapplication.ContentProviders.SuggestionProvider
 import com.example.edgarreyes.weatherapplication.Location
 import com.example.edgarreyes.weatherapplication.ViewModel.LocationViewModel
 import com.example.edgarreyes.weatherapplication.R
@@ -190,6 +194,12 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
     }
 
     private fun setupSearchView(){
+
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        // Assumes current activity is the searchable activity
+        main_activity_searchview.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        main_activity_searchview.setIconifiedByDefault(false);
+
         main_activity_searchview!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String): Boolean {
                 submitSearch(s)
@@ -211,5 +221,9 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
         if(mLocationList!!.size> 0)
             mLocationList!!.clear()
         loadWeatherInformation(url)
+
+        val suggestions = SearchRecentSuggestions(this,
+                SuggestionProvider.AUTHORITY, SuggestionProvider.MODE)
+        suggestions.saveRecentQuery(userInput, null)
     }
 }

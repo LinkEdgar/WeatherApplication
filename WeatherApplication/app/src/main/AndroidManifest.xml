@@ -16,6 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:authorities="com.example.edgarreyes.weatherapplication.ContentProviders.SuggestionProvider"
+            android:name=".ContentProviders.SuggestionProvider"/>
         <activity
             android:name=".Activities.MainActivity">
             <intent-filter>
