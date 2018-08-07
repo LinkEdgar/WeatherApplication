@@ -3,7 +3,6 @@ package com.example.edgarreyes.weatherapplication.Activities
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
 import android.widget.ListView
 import com.example.edgarreyes.weatherapplication.Adapters.WeatherDetailAdapter
 import com.example.edgarreyes.weatherapplication.R
@@ -12,7 +11,12 @@ import kotlinx.android.synthetic.main.activity_weather_detail.*
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
+import org.json.JSONObject
 import java.io.IOException
+
+/*
+
+ */
 
 class WeatherDetailActivity : AppCompatActivity() {
 
@@ -57,16 +61,14 @@ class WeatherDetailActivity : AppCompatActivity() {
                 try {
                     val responseData = response.body()!!.string()
                     Log.e("Response ", "--> $responseData")
-                    val jsonArray = JSONArray(responseData)
-                    //TODO delete log
-                    Log.e("jsonArray", "--> $jsonArray")
-                    for(x in 0..jsonArray.length()){
-                        val json = jsonArray.getJSONObject(x)
-                        val detailWeather = WeatherDetail(json.getString(weatherState), json.getString(date),
-                                json.getString(json.getString(minTemp)), json.getString(maxTemp),
-                                json.getString(json.getString(currentTemp)), json.getString(airPressure),
-                                json.getString(json.getString(humidity)))
-                        detailWeatherList!!.add(detailWeather)
+                    val jsonArray = JSONObject(responseData).getJSONArray(jsonArrayKey)
+
+                    this@WeatherDetailActivity.runOnUiThread{
+                        try{
+                            addDataToAdapter(jsonArray)
+                        }catch(e:IOException){
+                            e.printStackTrace()
+                        }
                     }
                 } catch (e: JSONException) {
 
@@ -83,13 +85,14 @@ class WeatherDetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        val weatherState = "weather_state"
+        val weatherState = "weather_state_name"
         val date = "created"
         val minTemp = "min_temp"
         val maxTemp = "max_temp"
         val currentTemp = "the_temp"
-        val airPressure = "ari_pressure"
+        val airPressure = "air_pressure"
         val humidity = "humidity"
+        val jsonArrayKey = "consolidated_weather"
     }
 
     private fun initListView(){
@@ -101,5 +104,17 @@ class WeatherDetailActivity : AppCompatActivity() {
         mAdapter = WeatherDetailAdapter(this, detailWeatherList)
         detailListView = weather_detail_list_view
         detailListView!!.adapter = mAdapter
+    }
+
+    private fun addDataToAdapter(jsonArray:JSONArray){
+        for(x in 0..(jsonArray.length()-1)){
+            val json = jsonArray.getJSONObject(x)
+            val detailWeather = WeatherDetail(json.getString(weatherState), json.getString(date),
+                    json.getString(minTemp), json.getString(maxTemp),
+                    json.getString(currentTemp), json.getString(airPressure),
+                    json.getString(humidity))
+            detailWeatherList!!.add(detailWeather)
+        }
+        mAdapter!!.notifyDataSetChanged()
     }
 }

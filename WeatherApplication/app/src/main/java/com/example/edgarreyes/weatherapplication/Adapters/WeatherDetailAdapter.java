@@ -33,6 +33,9 @@ public class WeatherDetailAdapter extends ArrayAdapter<WeatherDetail> {
         TextView weatherState = rootView.findViewById(R.id.detail_container_weather_state);
         weatherState.setText(detailObject.getWeatherState());
 
+
+
+
         return rootView;
     }
 }

@@ -2,7 +2,7 @@
     <string name="app_name">WeatherApplication</string>
 
     <string name="location_null_label">Failed to get location</string>
-    <string name="title_activity_detail_weather">5 Day Forecast</string>
+    <string name="activity_detail_weather_name">5 Day Forecast</string>
 
     <!-- Detail weather container -->
     <string name="weather_state_label">Weather State:</string>

@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import com.example.edgarreyes.weatherapplication.Adapters.WeatherAdapter
 import com.example.edgarreyes.weatherapplication.Location
@@ -99,13 +100,15 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
                     //TODO delete log
                     Log.e("Response ", "--> $responseData")
                     val jsonArray = JSONArray(responseData)
-                    for(x in 0..jsonArray.length()){
-                        val json = jsonArray.getJSONObject(x)
-                        val location = Location(json.getString(titleKey), json.getString(locationIdKey), json.getString(typeKey))
-                        mLocationList!!.add(location)
+
+                    //Data must be processes on main thread to  update UI
+                    this@MainActivity.runOnUiThread {
+                        try {
+                            addDataToAdapter(jsonArray)
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
                     }
-                    mAdapter!!.notifyDataSetChanged()
-                    //setProgressbarVisibility(false)
                 } catch (e: JSONException) {
 
                 }
@@ -153,6 +156,16 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
         detailActivityIntent.putExtra(locationIdKey, mLocationList!!.get(position).location)
         startActivity(detailActivityIntent)
         Toast.makeText(this, "$position clicked", Toast.LENGTH_SHORT).show()
+    }
+
+    fun addDataToAdapter(jsonArray: JSONArray){
+        for(x in 0..(jsonArray.length()-1)){
+            val json = jsonArray.getJSONObject(x)
+            val location = Location(json.getString(titleKey), json.getString(locationIdKey), json.getString(typeKey))
+            mLocationList!!.add(location)
+            mAdapter!!.notifyItemInserted(x)
+        }
+        setProgressbarVisibility(false)
     }
 
 
