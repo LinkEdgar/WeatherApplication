@@ -12,48 +12,102 @@
         android:id="@+id/detail_container_weather_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
     <TextView
-        tools:text="date goes here"
-        android:layout_below="@+id/detail_container_weather_state"
         android:layout_marginLeft="@dimen/horizontal_margin_large"
-        android:id="@+id/detail_container_date"
+        android:layout_below="@+id/detail_container_weather_state"
+        android:id="@+id/date_label"
+        android:text="@string/date_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
+        android:layout_marginLeft="@dimen/horizontal_margin"
+        android:layout_toRightOf="@+id/date_label"
+        tools:text="date goes here"
+        android:layout_below="@+id/detail_container_weather_state"
+        android:id="@+id/detail_container_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:layout_below="@+id/detail_container_date"
+        android:text="@string/min_temp_label"
+        android:id="@+id/min_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginLeft="@dimen/horizontal_margin"
+        android:layout_toRightOf="@id/min_label"
         tools:text="min temp"
         android:layout_below="@+id/detail_container_date"
-        android:layout_marginLeft="@dimen/horizontal_margin_large"
         android:id="@+id/detail_container_min_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
+        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:layout_below="@+id/detail_container_min_temp"
+        android:text="@string/max_temp_label"
+        android:id="@+id/max_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_toRightOf="@+id/max_label"
         tools:text="max temp"
         android:layout_below="@+id/detail_container_min_temp"
-        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:layout_marginLeft="@dimen/horizontal_margin"
         android:id="@+id/detail_container_max_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
     <TextView
+        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:text="@string/current_temp_label"
+        android:id="@+id/current_temp"
+        android:layout_below="@+id/detail_container_max_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_toRightOf="@id/current_temp"
         tools:text="current temp"
         android:layout_below="@+id/detail_container_max_temp"
-        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:layout_marginLeft="@dimen/horizontal_margin"
         android:id="@+id/detail_container_current_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
+        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:id="@+id/air_pressure"
+        android:layout_below="@+id/current_temp"
+        android:text="@string/air_pressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_toRightOf="@id/air_pressure"
         tools:text="air pressure"
         android:layout_below="@+id/detail_container_current_temp"
-        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:layout_marginLeft="@dimen/horizontal_margin"
         android:id="@+id/detail_container_air_pressure"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
+        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:text="@string/air_pressure"
+        android:layout_below="@+id/detail_container_air_pressure"
+        android:id="@+id/humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_toRightOf="@id/air_pressure"
         tools:text="humidity goes here"
         android:layout_below="@+id/detail_container_air_pressure"
-        android:layout_marginLeft="@dimen/horizontal_margin_large"
+        android:layout_marginLeft="@dimen/horizontal_margin"
         android:id="@+id/detail_container_humidity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

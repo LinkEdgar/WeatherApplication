@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
         if(mLocationList!!.size < 1) {
             checkLocationPermissions()
         }
+        setupSearchView()
 
 
     }
@@ -138,6 +140,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
         val locationIdKey = "woeid"
         val typeKey = "location_type"
         val locationListKey = "list"
+        val queryUrlAddress = "search/?query="
     }
 
     //helper method to correctly create our request url
@@ -184,5 +187,29 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
         //sets the data
         mViewModel!!.setData(mLocationList!!)
         setProgressbarVisibility(false)
+    }
+
+    private fun setupSearchView(){
+        main_activity_searchview!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(s: String): Boolean {
+                submitSearch(s)
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+
+                return false
+            }
+        })
+    }
+    /*
+    Takes in the user's text and attempts to query via the api
+     */
+    private fun submitSearch(userInput: String){
+        //url address to perform queries
+        val url = "$baseUrlAddress$queryUrlAddress$userInput"
+        if(mLocationList!!.size> 0)
+            mLocationList!!.clear()
+        loadWeatherInformation(url)
     }
 }
