@@ -86,19 +86,23 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
     private fun loadWeatherInformation(url:String){
         val weatherClient = OkHttpClient()
         val request= Request.Builder().url(url).build()
-        //setProgressbarVisibility(true)
+        setProgressbarVisibility(true)
         weatherClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.e("Failed", "--> $e")
-                //setProgressbarVisibility(false)
+                this@MainActivity.runOnUiThread {
+                    try {
+                        setProgressbarVisibility(false)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
             }
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 try {
                     val responseData = response.body()!!.string()
-                    //TODO delete log
-                    Log.e("Response ", "--> $responseData")
                     val jsonArray = JSONArray(responseData)
 
                     //Data must be processes on main thread to  update UI
@@ -155,7 +159,6 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.onClicked {
         val detailActivityIntent = Intent(this, WeatherDetailActivity::class.java)
         detailActivityIntent.putExtra(locationIdKey, mLocationList!!.get(position).location)
         startActivity(detailActivityIntent)
-        Toast.makeText(this, "$position clicked", Toast.LENGTH_SHORT).show()
     }
 
     fun addDataToAdapter(jsonArray: JSONArray){

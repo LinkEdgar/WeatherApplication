@@ -3,6 +3,7 @@ package com.example.edgarreyes.weatherapplication.Activities
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ListView
 import com.example.edgarreyes.weatherapplication.Adapters.WeatherDetailAdapter
 import com.example.edgarreyes.weatherapplication.R
@@ -40,7 +41,6 @@ class WeatherDetailActivity : AppCompatActivity() {
     private fun handleIntentData(){
         val intent = intent
         woeId = intent.getStringExtra(MainActivity.locationIdKey)
-        Log.e("woedid", "--> $woeId")
     }
 
     /*
@@ -52,16 +52,23 @@ class WeatherDetailActivity : AppCompatActivity() {
         val url = buildUrl()
         val request = Request.Builder()
                 .url(url).build()
+        setProgressbarVisibility(true)
         detailInfoClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("Failed", "--> $e")
+                Log.e("HttpRequest:", "failed")
+                this@WeatherDetailActivity.runOnUiThread{
+                    try{
+                        setProgressbarVisibility(false)
+                    }catch(e:IOException){
+                        e.printStackTrace()
+                    }
+                }
             }
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 try {
                     val responseData = response.body()!!.string()
-                    Log.e("Response ", "--> $responseData")
                     val jsonArray = JSONObject(responseData).getJSONArray(jsonArrayKey)
 
                     this@WeatherDetailActivity.runOnUiThread{
@@ -105,7 +112,7 @@ class WeatherDetailActivity : AppCompatActivity() {
     }
 
     //This method takes in a json array and extracts the necessary data into a custom weather object that
-    //populates our listview 
+    //populates our listview
     private fun addDataToAdapter(jsonArray:JSONArray){
         for(x in 0..(jsonArray.length()-1)){
             val json = jsonArray.getJSONObject(x)
@@ -115,6 +122,14 @@ class WeatherDetailActivity : AppCompatActivity() {
                     json.getString(humidity), json.getString(weatherAbrreviation))
             detailWeatherList!!.add(detailWeather)
         }
+        setProgressbarVisibility(false)
         mAdapter!!.notifyDataSetChanged()
+    }
+
+    //takes a boolean and sets the progressbar base on its value
+    private fun setProgressbarVisibility(setVisible: Boolean){
+        if(setVisible)
+            weather_detail_progressbar.visibility = View.VISIBLE
+        else weather_detail_progressbar.visibility = View.GONE
     }
 }
